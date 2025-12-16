@@ -66,6 +66,7 @@ function App() {
     <>
       <div>
         <p>Simple notes</p>
+        <p>This is just a test</p>
         <div>
           <form onSubmit={submit}>
             <input
