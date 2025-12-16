@@ -19,6 +19,7 @@ export default defineConfig({
     allowedHosts: [
       "decomposed-unshepherding-vilma.ngrok-free.dev",
       "localhost",
+      "grade-manager-beta.netlify.app",
     ],
   },
 });
