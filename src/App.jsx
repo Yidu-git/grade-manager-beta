@@ -90,6 +90,7 @@ function App() {
               <div key={note.id}>
                 <h3>{note.title}</h3>
                 <p>{note.note}</p>
+                <button onClick={() => deleteNote(note.id)}>Delete</button>
                 <hr />
               </div>
             ))}
