@@ -53,14 +53,22 @@ function App() {
     getNotes();
   }, []);
 
-  fetch("https://decomposed-unshepherding-vilma.ngrok-free.dev/notes", {
-    method: "OPTIONS",
-    headers: {
-      "ngrok-skip-browser-warning": "true",
-    },
-  })
-    .then((r) => console.log(r))
-    .catch((e) => console.log(e));
+  const deleteNote = async (id) => {
+    try {
+      const res = await fetch(`${baseURL}/notes/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
+      });
+      const data = await res.json();
+      console.log(data);
+      // Update notes after deletion
+      setNotes(notes.filter((note) => note.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
 
   return (
     <>
