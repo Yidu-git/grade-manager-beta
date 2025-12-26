@@ -4,6 +4,9 @@ const BASE_URL = " https://decomposed-unshepherding-vilma.ngrok-free.dev";
 
 export const api = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "ngrok-skip-browser-warning": "true",
+  },
 });
 
 export const apiPrivate = axios.create({
@@ -11,5 +14,6 @@ export const apiPrivate = axios.create({
   // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+    "ngrok-skip-browser-warning": "true",
   },
 });

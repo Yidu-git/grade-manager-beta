@@ -34,7 +34,7 @@ export const UsersPage = () => {
             return res;
           });
         setUsers(response.data);
-        console.log(users);
+        console.log(response);
       } catch (error) {
         console.error("Error while fetching users:", error);
       }
@@ -42,10 +42,10 @@ export const UsersPage = () => {
 
     getUsers();
 
-    return () => {
-      isMounted = false;
-      controller.abort();
-    };
+    // return () => {
+    //   isMounted = false;
+    //   controller.abort();
+    // };
   }, [refreshState]);
 
   return (
