@@ -101,7 +101,7 @@ export const NotesPage = () => {
       </h2>
       <input
         type="checkbox"
-        onChange={(e) => setIncludePublicNotes(!e.target.checked)}
+        onChange={(e) => setIncludePublicNotes(e.target.checked)}
       />
       <label>View notes from other users</label>
       <div className="notes-container">
