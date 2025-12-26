@@ -47,7 +47,7 @@ export const NotesPage = () => {
     //   isMounted = false;
     //   controller.abort();
     // };
-  }, [refreshState]);
+  }, [refreshState, includePublicNotes]);
 
   const postNote = async () => {
     try {
