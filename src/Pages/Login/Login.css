@@ -1,0 +1,10 @@
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: inherit;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+}
