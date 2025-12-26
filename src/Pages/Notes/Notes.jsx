@@ -113,7 +113,9 @@ export const NotesPage = () => {
                 <p>Created by {note.UserName}</p>
               </div>
               <p>{note.note}</p>
-              <button onClick={() => deleteNote(note.id)}>delete</button>
+              {auth.user && auth.user.id === note.userID && (
+                <button onClick={() => deleteNote(note.id)}>delete</button>
+              )}
             </div>
           ))
         ) : (
