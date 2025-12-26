@@ -1,6 +1,5 @@
 import { useAuth } from "../../Hooks/Context/useAuth.jsx";
 import { useState, useEffect } from "react";
-import { api } from "../../API/axios.js";
 import { Link } from "react-router-dom";
 import "./Notes.css";
 import useAxiosPrivate from "../../Hooks/State/useAxiosPrivate.js";
@@ -8,6 +7,7 @@ import useAxiosPrivate from "../../Hooks/State/useAxiosPrivate.js";
 export const NotesPage = () => {
   const { auth } = useAuth();
   const [refreshState, setRefreshState] = useState(false);
+  const [includePublicNotes, setIncludePublicNotes] = useState(false);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [noteError, setNoteError] = useState(null);
@@ -17,7 +17,7 @@ export const NotesPage = () => {
     category: null,
     Private: true,
     userID: auth.user ? auth.user.id : null,
-    userName: auth.user ? auth.user.displayname : null,
+    userName: auth.user ? auth.user.username : null,
     description: "",
     tags: [],
   });
@@ -29,7 +29,7 @@ export const NotesPage = () => {
     const getNotes = async () => {
       try {
         const response = await apiPrivate
-          .get("/notes/all/10", {
+          .get(`/notes/${includePublicNotes ? "all" : "profile"}/10`, {
             signal: controller.signal,
           })
           .then((res) => {
@@ -58,6 +58,18 @@ export const NotesPage = () => {
     }
   };
 
+  const deleteNote = async (id) => {
+    {
+      try {
+        const response = await apiPrivate.delete(`/notes/${id}`);
+        console.log("Note deleted:", response.data);
+        setRefreshState((prev) => !prev);
+      } catch (error) {
+        console.error("Error deleting note:", error);
+      }
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -83,16 +95,25 @@ export const NotesPage = () => {
   return (
     <div>
       <h1>Notes Page</h1>
+      <Link to="/">Home</Link>
       <h2>
         Welcome to notes{auth?.user ? " " + auth?.user?.displayname : ""}!
       </h2>
+      <input
+        type="checkbox"
+        onChange={(e) => setIncludePublicNotes(!e.target.checked)}
+      />
+      <label>View notes from other users</label>
       <div className="notes-container">
         {notes?.length > 0 ? (
           notes.map((note) => (
             <div key={note.id} className="note-card">
-              <h3>{note.title}</h3>
+              <div>
+                <h3>{note.title}</h3>
+                <p>Created by {note.UserName}</p>
+              </div>
               <p>{note.note}</p>
-              <p>Created by {note.UserName}</p>
+              <button onClick={() => deleteNote(note.id)}>delete</button>
             </div>
           ))
         ) : (
@@ -104,7 +125,7 @@ export const NotesPage = () => {
         </button>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="note-form">
         <input
           type="text"
           placeholder="Title"
