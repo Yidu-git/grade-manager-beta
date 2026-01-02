@@ -1,66 +1,78 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
-import { api } from "../../API/axios.js";
-import Cookies from "universal-cookie";
-import { useRefresh } from "../../Hooks/Context/useRefresh.jsx";
-
-import "../Signup/Signup.css";
 import "./Login.css";
-import { useAuth } from "../../Hooks/Context/useAuth.jsx";
+import { useState } from "react";
+import { useAuth } from "../../Context/useAuth";
+import useLogin from "../../Hooks/useLogin";
+import { useNavigate } from "react-router-dom";
 
-export const LoginPage = () => {
-  const [identifier, setIdentifier] = useState("");
+const LoginPage = () => {
+  const { auth } = useAuth();
+  const login = useLogin();
+  const [user, setUser] = useState({
+    identifier: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const nav = useNavigate();
 
-  const { refreshToken, setRefreshToken } = useRefresh();
-  const { auth, setAuth } = useAuth();
-
-  const submit = async () => {
-    const status = await api
-      .post("/login", {
-        identifier: identifier,
-        password: password,
-      })
-      .then((r) => {
-        setRefreshToken(r.data.refresh_token);
-        setRefreshToken(r.data.refresh_token);
-        setAuth((prev) => {
-          return { user: r.data.user, token: r.data.token };
-        });
-        setAuth({
-          user: r.data.user,
-          token: r.data.token,
-          refresh_token: r.data.refresh_token,
-        });
-        // setRefreshToken("s");
-        console.log(r.data);
-        return r.status;
-      });
-    console.log("Login : " + status);
-    nav("/");
+  const handleSubmit = () => {
+    setIsLoading(true);
+    try {
+      const res = login(user);
+      nav("/");
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <>
-      <div id="form">
+    <div className="form-container">
+      <div className="input">
+        <label>Username or email</label>
         <input
           type="text"
-          onChange={(e) => setIdentifier(e.target.value)}
-          placeholder="Username"
+          placeholder="Username/email"
+          onChange={(e) =>
+            setUser((prev) => ({ ...prev, identifier: e.target.value }))
+          }
+          required
         />
-        <input
-          type="text"
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        <button type="submit" onClick={submit}>
-          Login
-        </button>
-        <Link to="/"></Link>
-        <Link to="/signup">Signup</Link>
       </div>
-    </>
+      <div className="input">
+        <label>Password</label>
+        <input
+          type="password"
+          placeholder="Password"
+          onChange={(e) =>
+            setUser((prev) => ({ ...prev, password: e.target.value }))
+          }
+          required
+        />
+      </div>
+      <div className="switch-container switch-small">
+        <input
+          type="checkbox"
+          id="remmember"
+          onChange={(e) => console.log("switch" + e.target.checked)}
+        />
+        <label htmlFor="remmember" className="switch"></label>
+        <p>Remember this device</p>
+      </div>
+      <div>
+        <button onClick={handleSubmit}>
+          {isLoading ? "Loging in..." : "Login"}
+        </button>
+      </div>
+    </div>
   );
 };
+
+export default LoginPage;

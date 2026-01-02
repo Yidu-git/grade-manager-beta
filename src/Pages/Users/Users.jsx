@@ -1,10 +1,10 @@
 import "./Users.css";
 import { useState, useEffect } from "react";
-import { useAuth } from "../../Hooks/Context/useAuth.jsx";
+import { useAuth } from "../../Context/useAuth.jsx";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../Hooks/State/useAxiosPrivate";
+import useAxiosPrivate from "../../Hooks/useAxiosPrivate.js";
 
-export const UsersPage = () => {
+const UsersPage = () => {
   const { auth } = useAuth();
   const [users, setUsers] = useState([]);
   const [refreshState, setRefreshState] = useState(false);
@@ -87,3 +87,5 @@ export const UsersPage = () => {
     </div>
   );
 };
+
+export default UsersPage;

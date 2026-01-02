@@ -1,0 +1,29 @@
+.loading-animation {
+  --size: 50px;
+  --thickness: 15px;
+  display: block;
+  width: var(--size);
+  height: var(--size);
+}
+
+.loading-animation div {
+  --size: 50px;
+  --thickness: 10px;
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  border: var(--thickness) solid;
+  border-radius: var(--size);
+}
+
+@keyframes loading_scale {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 0.5;
+  }
+  100% {
+    scale: 1;
+  }
+}

@@ -71,3 +71,62 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+input,
+textarea,
+select {
+  font: inherit;
+  margin: 0;
+}
+
+.switch-container {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+  height: fit-content;
+  gap: 10px;
+  margin: 0;
+  transition: all 0.5s;
+}
+
+.switch {
+  --height: 34px;
+  --width: 60px;
+  background-color: #757575;
+  border-radius: var(--height);
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+  transition: all 200ms cubic-bezier(1, -0.06, 0.286, 1.225) 0s;
+  /* transition: all 0.5s; */
+}
+
+.switch-container.switch-small .switch {
+  --height: 20px;
+  --width: 40px;
+}
+
+.switch input,
+.switch-container input {
+  display: none;
+}
+
+.switch::before {
+  content: "";
+  background-color: white;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  border-radius: 1000px;
+  width: calc(var(--height) - 8px);
+  height: calc(var(--height) - 8px);
+  transition: all 150ms cubic-bezier(1, -0.06, 0.318, 1.456) 0s;
+}
+
+.switch-container input:checked + .switch {
+  background-color: rgb(35, 75, 255);
+}
+
+.switch-container input:checked + .switch::before {
+  transform: translateX(calc(var(--width) - 0px - var(--height)));
+}

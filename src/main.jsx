@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import { RefreshTokenProvider } from "./Hooks/Context/useRefresh.jsx";
-import { AuthProvider } from "./Hooks/Context/useAuth.jsx";
+import { RefreshTokenProvider } from "./Context/useRefresh.jsx";
+import { AuthProvider } from "./Context/useAuth.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { api } from "../../API/axios";
 import { useNavigate } from "react-router-dom";
 
-export const SignupPage = () => {
+const SignupPage = () => {
   const [user, setUser] = useState({
     first_name: "",
     last_name: "",
@@ -108,3 +108,5 @@ export const SignupPage = () => {
     </>
   );
 };
+
+export default SignupPage;
