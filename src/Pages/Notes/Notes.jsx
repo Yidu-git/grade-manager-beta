@@ -11,11 +11,9 @@ const NotesPage = () => {
   const nav = useNavigate();
 
   const [note, setNote] = useState({
-    UserID: auth?.user?.id || "",
     UserName: auth?.user?.username,
     title: "",
     note: "",
-    description: "Description",
     category: "",
     tags: [""],
     Private: false,
@@ -26,7 +24,6 @@ const NotesPage = () => {
       UserName: auth?.user?.username,
       title: "Title",
       note: "Contents this is a note",
-      description: "This is a description",
       category: "test",
       tags: ["Test", "Temporary"],
       Private: false,
@@ -50,9 +47,29 @@ const NotesPage = () => {
         return res;
       });
       setRefresh((prev) => !prev);
+      // console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const editNote = async (id) => {
+    try {
+      const res = await api.post(`/notes/edit/${id}`, note).then((res) => {
+        return res;
+      });
+      setRefresh((prev) => !prev);
       console.log(res);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const submit = async () => {
+    if (selection.length === 0) {
+      await createNote();
+    } else if (selection.length === 1) {
+      await editNote(selection[0]);
     }
   };
 
@@ -65,6 +82,18 @@ const NotesPage = () => {
     }
   };
 
+  const handleNoteClick = (e, i) => {
+    if (selection.includes(i)) {
+      setSelectoin([]);
+    } else {
+      setSelectoin([i]);
+      setNote(notes.find((note) => note.id === i));
+      console.log(note);
+    }
+    console.log(i);
+    console.log(selection);
+  };
+
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -72,7 +101,7 @@ const NotesPage = () => {
     const getNotes = async () => {
       try {
         const response = await api
-          .get(`/notes/${viewPublic ? "all" : "profile"}/10`, {
+          .get(`/notes/${viewPublic ? "all" : "profile"}/20`, {
             signal: controller.signal,
           })
           .then((res) => {
@@ -112,7 +141,7 @@ const NotesPage = () => {
         console.error(error);
       }
     };
-    searchTerm != "" ? getNotes() : setRefresh((prev) => !prev);
+    searchTerm !== "" ? getNotes() : setRefresh((prev) => !prev);
     return () => {
       isMounted = false;
     };
@@ -148,7 +177,7 @@ const NotesPage = () => {
               <label className="switch" htmlFor="view-public"></label>
               <p>View public</p>
             </div>
-            <button onClick={createNote}> + </button>
+            <button onClick={submit}> + </button>
           </div>
         </div>
         <div className="notes-container">
@@ -166,8 +195,16 @@ const NotesPage = () => {
                 console.log("delete attempt" + note.id);
                 await deleteNote(note.id);
               };
+              // console.log("n");
+              // console.log(selection.includes(note.id));
               return (
-                <div className={`note ${selection.includes(i)}`} key={i}>
+                <div
+                  className={`note ${
+                    selection.includes(note.id) ? "selected" : ""
+                  }`}
+                  key={i}
+                  onClick={(e) => handleNoteClick(e, note.id)}
+                >
                   <div className="note-head">
                     <h2>{note.title}</h2>
                     <p>
@@ -187,7 +224,7 @@ const NotesPage = () => {
                     </p>
                   </div>
                   <div className="tags">
-                    {note.tags.map((tag, i) => {
+                    {note.tags.slice(0, 3).map((tag, i) => {
                       return <p className="tag">{tag}</p>;
                     })}
                   </div>
@@ -219,6 +256,7 @@ const NotesPage = () => {
                         Private: e.target.checked,
                       }));
                     }}
+                    checked={note.Private}
                   />
                   <label className="switch" htmlFor="Private"></label>
                   <p>Private</p>
@@ -230,6 +268,7 @@ const NotesPage = () => {
                     const tags = e.target.value.split(",");
                     setNote((prev) => ({ ...prev, tags: tags }));
                   }}
+                  value={note.tags.join(",")}
                 />
                 <input
                   type="text"
