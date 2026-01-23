@@ -1,6 +1,6 @@
 import axios from "axios";
-// const BASE_URL = "https://decomposed-unshepherding-vilma.ngrok-free.dev/";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://decomposed-unshepherding-vilma.ngrok-free.dev/";
+// const BASE_URL = "http://localhost:3000";
 // const BASE_URL = "https://snitchier-maeve-shufflingly.ngrok-free.dev";
 
 export const api = axios.create({
